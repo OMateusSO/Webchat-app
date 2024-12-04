@@ -8,6 +8,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "firebase": "^11.0.2",
     "vue": "^3.2.13",
     "vue-router": "^4.4.5"
@@ -22,5 +23,9 @@
     "last 2 versions",
     "not dead",
     "not ie 11"
-  ]
+  ],
+  "description": "```\r npm install\r ```",
+  "main": "postcss.config.js",
+  "author": "",
+  "license": "ISC"
 }
