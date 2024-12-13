@@ -7,7 +7,6 @@
       </p>
       <p v-else class="mt-4 text-gray-500 text-center">Carregando informações da sala...</p>
 
-      <!-- Botão de exclusão -->
       <div class="mt-6 flex justify-center">
         <button
           @click="excluirSala"
@@ -21,27 +20,26 @@
 </template>
 
 <script>
-import { getFirestore, collection, doc, deleteDoc, getDoc, getDocs } from "firebase/firestore"; // Corrigido getDoc
+import { getFirestore, collection, doc, deleteDoc, getDoc, getDocs } from "firebase/firestore"; 
 
 export default {
   data() {
     return {
-      salaId: this.$route.params.id, // Obtém o parâmetro "id" da rota
-      nomeSala: "", // Nome da sala será carregado do Firestore
+      salaId: this.$route.params.id, 
+      nomeSala: "", 
     };
   },
   mounted() {
-    this.carregarNomeSala(); // Chama a função ao montar o componente
+    this.carregarNomeSala();
   },
   methods: {
-    // Função para carregar o nome da sala
     async carregarNomeSala() {
       const db = getFirestore();
       const salaDocRef = doc(db, `salas/${this.salaId}`);
       try {
         const docSnap = await getDoc(salaDocRef);
         if (docSnap.exists()) {
-          this.nomeSala = docSnap.data().sala; // Define o nome da sala
+          this.nomeSala = docSnap.data().sala; 
         } else {
           console.error("Sala não encontrada");
           this.nomeSala = "Sala não encontrada";
@@ -51,24 +49,22 @@ export default {
         this.nomeSala = "Erro ao carregar dados";
       }
     },
-    // Função para excluir a sala e suas mensagens
+
     async excluirSala() {
       const db = getFirestore();
       
-      // Referência à subcoleção de mensagens
       const mensagensRef = collection(db, `salas/${this.salaId}/mensagens`);
       
       try {
-        // Deletando todas as mensagens da sala de forma assíncrona
         const mensagensSnapshot = await getDocs(mensagensRef);
-        const deletePromises = mensagensSnapshot.docs.map(doc => deleteDoc(doc.ref)); // Cria uma lista de promessas
-        await Promise.all(deletePromises); // Aguarda todas as exclusões de mensagens
+        const deletePromises = mensagensSnapshot.docs.map(doc => deleteDoc(doc.ref)); 
+        await Promise.all(deletePromises); 
 
-        // Agora deletando o documento da sala
+        
         const salaDocRef = doc(db, `salas/${this.salaId}`);
         await deleteDoc(salaDocRef);
 
-        this.$router.push("/feed"); // Redireciona para o feed após a exclusão
+        this.$router.push("/feed"); 
       } catch (error) {
         console.error("Erro ao excluir a sala:", error);
         alert("Erro ao excluir a sala. Tente novamente.");

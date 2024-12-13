@@ -7,18 +7,11 @@
         to="/"
         class="text-2xl font-bold text-indigo-600 hover:text-indigo-800 transition"
       >
-        Home
+        Projeto Z
       </RouterLink>
 
       <!-- Direita: Links e Botões -->
       <div class="flex items-center space-x-4">
-        <RouterLink
-          to="/feed"
-          v-if="isLoggedIn"
-          class="py-2 px-4 rounded-lg text-gray-600 hover:text-indigo-600 hover:bg-gray-100 transition"
-        >
-          Feed
-        </RouterLink>
         <RouterLink
           to="/registrar"
           v-if="!isLoggedIn"
