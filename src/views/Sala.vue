@@ -16,7 +16,7 @@
       </div>
 
       
-      <form @submit.prevent="enviarMensagem" class="flex py-4 m-2 bg-white">
+      <form @submit.prevent="enviarMensagem" class="flex py-2 m-2 bg-white">
         <input
           v-model="novaMensagem"
           type="text"
@@ -146,12 +146,9 @@ html, body {
 
 #mensagens-container {
   height: calc(100vh - 160px); 
-  overflow-y: auto;
-  overflow-x: hidden; /* Esconde overflow lateral */
+  overflow-y: auto; 
   padding: 10px;
-  word-wrap: break-word; /* Quebra palavras longas */
 }
-
 
 #mensagens-container::-webkit-scrollbar {
   width: 8px;
