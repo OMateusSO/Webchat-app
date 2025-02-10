@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <nav class="flex items-center justify-between py-4 px-6 sm:px-16 bg-white shadow-md">
+    <nav class="flex items-center justify-between py-4 sm:py-2 px-6 sm:px-16 bg-white shadow-md">
       <RouterLink
         to="/"
         class="text-2xl font-bold text-indigo-600 hover:text-indigo-800 transition sm:text-xl xs:text-lg"
@@ -11,7 +11,7 @@
       <!-- Menu para desktop -->
       <div class="hidden sm:flex items-center space-x-4">
         <RouterLink
-          to="/registrar"
+          to="/registar"
           v-if="!isLoggedIn"
           class="py-2 px-4 rounded-lg text-gray-600 hover:text-indigo-600 hover:bg-gray-100 transition"
         >
@@ -132,11 +132,18 @@ const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
 };
 
-const handleSignOut = () => {
-  signOut(auth).then(() => {
+const handleSignOut = async () => {
+  try {
+    console.log("Tentando deslogar...");
+    await signOut(auth);
+    console.log("Deslogado com sucesso.");
+    isLoggedIn.value = false;
     router.push("/");
-  });
+  } catch (error) {
+    console.error("Erro ao deslogar:", error.message);
+  }
 };
+
 
 const perfil = () => {
   router.push("/perfil");

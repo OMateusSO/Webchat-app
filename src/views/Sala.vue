@@ -16,7 +16,7 @@
       </div>
 
       
-      <form @submit.prevent="enviarMensagem" class="flex py-4 bg-white">
+      <form @submit.prevent="enviarMensagem" class="flex py-4 m-2 bg-white">
         <input
           v-model="novaMensagem"
           type="text"

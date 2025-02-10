@@ -1,7 +1,8 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import './index.css'
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router';
+import './index.css'; // Certifique-se de que o caminho e o servidor estão configurados corretamente
+
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -18,8 +19,10 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
-createApp(App).use(router).mount('#app')
+// Inicializar o aplicativo Vue e usar o roteador
+const app = createApp(App);
 
-
+app.use(router);
+app.mount('#app');
