@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 max-h-[630px] overflow-y-auto bg-white p-6 rounded-lg shadow-md" id="mensagens-container">
+  <div class="flex-1 overflow-y-auto bg-white p-6 rounded-lg shadow-md" id="mensagens-container">
     <div
       v-for="mensagem in mensagens"
       :key="mensagem.id"
