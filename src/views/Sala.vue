@@ -146,9 +146,12 @@ html, body {
 
 #mensagens-container {
   height: calc(100vh - 160px); 
-  overflow-y: auto; 
+  overflow-y: auto;
+  overflow-x: hidden; /* Esconde overflow lateral */
   padding: 10px;
+  word-wrap: break-word; /* Quebra palavras longas */
 }
+
 
 #mensagens-container::-webkit-scrollbar {
   width: 8px;
