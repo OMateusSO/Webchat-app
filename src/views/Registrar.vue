@@ -1,74 +1,49 @@
 <template>
-  <div class="flex flex-1 items-center justify-center p-4 min-h-screen bg-gray-100">
-    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold text-center mb-4">Registrar</h1>
-
-      <!-- Campos de Registro -->
-      <div class="space-y-4">
-        <!-- Campo de Email -->
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            id="email"
-            type="text"
-            placeholder="Digite seu email"
-            v-model="email"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
-          />
+  <div class="flex flex-col min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50">
+    <div class="flex flex-1 items-center justify-center px-4">
+      <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-2xl">
+        <div class="flex flex-col items-center mb-6">
+          <img src="https://github.com/radix-vue.png" alt="Logo Empresa" class="w-20 h-20 rounded-full shadow-md">
+          <h1 class="text-2xl font-bold text-indigo-700 mt-4">Crie sua conta</h1>
         </div>
+        
+        <div class="space-y-4">
+          <div>
+            <label for="nick" class="block text-sm font-medium text-gray-700">Nick</label>
+            <input id="nick" type="text" placeholder="Digite seu nick" v-model="nick"
+              class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input id="email" type="text" placeholder="Digite seu email" v-model="email"
+              class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
 
-        <!-- Campo de Senha -->
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">
-            Senha
-          </label>
-          <input
-            id="password"
-            type="password"
-            placeholder="Digite sua senha"
-            v-model="password"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
-          />
-        </div>
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+            <input id="password" type="password" placeholder="Digite sua senha" v-model="password"
+              class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+          </div>
 
-        <!-- Botão de Registrar -->
-        <div>
-          <button
-            @click="Registrar"
-            class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
-          >
+          <button @click="Registrar"
+            class="w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 transition disabled:opacity-50">
             Registrar
           </button>
-        </div>
 
-        <!-- Botão de Registro com Google -->
-        <div>
-          <button
-            @click="registerWithGoogle"
-            class="w-full flex items-center justify-center gap-2 border border-gray-300 p-2 rounded-md hover:bg-gray-100 transition"
-          >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
-              alt="Google Logo"
-              class="w-5 h-5"
-            />
+          <button @click="registerWithGoogle"
+            class="w-full flex items-center justify-center gap-2 border border-gray-300 p-2 rounded-md hover:bg-gray-100 transition">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo" class="w-5 h-5">
             <span class="text-gray-700 font-medium">Registrar com Google</span>
           </button>
-        </div>
 
-        <!-- Mensagem de Erro -->
-        <div v-if="errMsg" class="text-sm text-red-500 text-center">
-          {{ errMsg }}
-        </div>
+          <div v-if="errMsg" class="text-sm text-red-500 text-center">
+            {{ errMsg }}
+          </div>
 
-        <!-- Link para Login -->
-        <div class="text-xs text-gray-500 text-center mt-4">
-          Já possui conta?
-          <router-link to="/logar" class="text-blue-600 font-bold ml-1">
-            Faça login
-          </router-link>
+          <div class="text-xs text-gray-500 text-center mt-4">
+            Já possui conta?
+            <router-link to="/logar" class="text-indigo-600 font-bold ml-1">Faça login</router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -77,12 +52,7 @@
 
 <script>
 import { ref } from "vue";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "vue-router";
 
 export default {
@@ -97,11 +67,9 @@ export default {
     const Registrar = () => {
       createUserWithEmailAndPassword(auth, email.value, password.value)
         .then(() => {
-          console.log("Registro bem-sucedido!");
           router.push("/feed");
         })
         .catch((error) => {
-          console.error("Erro no registro:", error.code);
           switch (error.code) {
             case "auth/email-already-in-use":
               errMsg.value = "Este email já está sendo usado";
@@ -121,12 +89,10 @@ export default {
     const registerWithGoogle = () => {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider)
-        .then((result) => {
-          console.log("Registro com Google bem-sucedido:", result.user);
+        .then(() => {
           router.push("/feed");
         })
         .catch((error) => {
-          console.error("Erro no registro com Google:", error.message);
           errMsg.value = "Erro ao registrar com Google: " + error.message;
         });
     };

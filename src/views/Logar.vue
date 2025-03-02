@@ -1,74 +1,44 @@
 <template>
-  <div class="flex flex-1 items-center justify-center p-4 min-h-screen bg-gray-100">
-    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold text-center mb-4">Login</h1>
-
-      <!-- Campos de Login -->
-      <div class="space-y-4">
-        <!-- Campo de Email -->
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">
-            Email
-          </label>
-          <input
-            id="email"
-            type="text"
-            placeholder="Digite seu email"
-            v-model="email"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
-          />
+  <div class="flex flex-col min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-50">
+    <div class="flex flex-1 items-center justify-center px-4">
+      <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-2xl">
+        <div class="flex flex-col items-center mb-6">
+          <img src="https://github.com/radix-vue.png" alt="Logo Empresa" class="w-20 h-20 rounded-full shadow-md">
+          <h1 class="text-2xl font-bold text-indigo-700 mt-4">Bem-vindo de volta</h1>
         </div>
+        
+        <div class="space-y-4">
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input id="email" type="text" placeholder="Digite seu email" v-model="email"
+              class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          </div>
 
-        <!-- Campo de Senha -->
-        <div>
-          <label for="password" class="block text-sm font-medium text-gray-700">
-            Senha
-          </label>
-          <input
-            id="password"
-            type="password"
-            placeholder="Digite sua senha"
-            v-model="password"
-            class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"
-          />
-        </div>
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+            <input id="password" type="password" placeholder="Digite sua senha" v-model="password"
+              class="mt-1 w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+          </div>
 
-        <!-- Botão de Login -->
-        <div>
-          <button
-            @click="Logar"
-            class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50"
-          >
+          <button @click="Logar"
+            class="w-full bg-indigo-600 text-white p-2 rounded-md hover:bg-indigo-700 transition disabled:opacity-50">
             Logar
           </button>
-        </div>
 
-        <!-- Botão de Login com Google -->
-        <div>
-          <button
-            @click="signInWithGoogle"
-            class="w-full flex items-center justify-center gap-2 border border-gray-300 p-2 rounded-md hover:bg-gray-100 transition"
-          >
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
-              alt="Google Logo"
-              class="w-5 h-5"
-            />
+          <button @click="signInWithGoogle"
+            class="w-full flex items-center justify-center gap-2 border border-gray-300 p-2 rounded-md hover:bg-gray-100 transition">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo" class="w-5 h-5">
             <span class="text-gray-700 font-medium">Logar com Google</span>
           </button>
-        </div>
 
-        <!-- Mensagem de Erro -->
-        <div v-if="errMsg" class="text-sm text-red-500 text-center">
-          {{ errMsg }}
-        </div>
+          <div v-if="errMsg" class="text-sm text-red-500 text-center">
+            {{ errMsg }}
+          </div>
 
-        <!-- Link para Cadastro -->
-        <div class="text-xs text-gray-500 text-center mt-4">
-          Não possui conta?
-          <router-link to="/registrar" class="text-blue-600 font-bold ml-1">
-            Inscreva-se
-          </router-link>
+          <div class="text-xs text-gray-500 text-center mt-4">
+            Não possui conta?
+            <router-link to="/registrar" class="text-indigo-600 font-bold ml-1">Inscreva-se</router-link>
+          </div>
         </div>
       </div>
     </div>
@@ -77,16 +47,11 @@
 
 <script>
 import { ref } from "vue";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useRouter } from "vue-router";
 
 export default {
-  name: "Logar",
+  name: "Login",
   setup() {
     const email = ref("");
     const password = ref("");
@@ -97,11 +62,9 @@ export default {
     const Logar = () => {
       signInWithEmailAndPassword(auth, email.value, password.value)
         .then(() => {
-          console.log("Login com email e senha bem-sucedido!");
           router.push("/feed");
         })
         .catch((error) => {
-          console.error("Erro no login:", error.code);
           switch (error.code) {
             case "auth/invalid-email":
               errMsg.value = "O email está incorreto";
@@ -121,12 +84,10 @@ export default {
     const signInWithGoogle = () => {
       const provider = new GoogleAuthProvider();
       signInWithPopup(auth, provider)
-        .then((result) => {
-          console.log("Login com Google bem-sucedido:", result.user);
+        .then(() => {
           router.push("/feed");
         })
         .catch((error) => {
-          console.error("Erro no login com Google:", error.message);
           errMsg.value = "Erro ao logar com Google: " + error.message;
         });
     };
@@ -141,7 +102,3 @@ export default {
   },
 };
 </script>
-
-<style>
-
-</style>

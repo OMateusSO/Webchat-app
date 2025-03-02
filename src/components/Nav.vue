@@ -11,7 +11,7 @@
       <!-- Menu para desktop -->
       <div class="hidden sm:flex items-center space-x-4">
         <RouterLink
-          to="/registar"
+          to="/registrar"
           v-if="!isLoggedIn"
           class="py-2 px-4 rounded-lg text-gray-600 hover:text-indigo-600 hover:bg-gray-100 transition"
         >
