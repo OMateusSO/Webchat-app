@@ -52,22 +52,40 @@
 
 <script>
 import { ref } from "vue";
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { useRouter } from "vue-router";
 
 export default {
   name: "Registrar",
   setup() {
+    const nick = ref(""); // Capturar o nome (nickname)
     const email = ref("");
     const password = ref("");
     const errMsg = ref("");
     const router = useRouter();
     const auth = getAuth();
+    const db = getFirestore();
 
     const Registrar = () => {
+      if (!nick.value.trim()) {
+        errMsg.value = "O nick é obrigatório!";
+        return;
+      }
+
       createUserWithEmailAndPassword(auth, email.value, password.value)
-        .then(() => {
-          router.push("/feed");
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+
+          // Salvar os dados do usuário no Firestore (users/{uid})
+          await setDoc(doc(db, "users", user.uid), {
+            nome: nick.value,  // Armazena o nickname
+            email: user.email,
+            fotoPerfil: "",    // Deixa a foto vazia por padrão
+            bio: "",           // Deixa a bio vazia por padrão
+          });
+
+          router.push("/feed"); // Redireciona para o feed após registro
         })
         .catch((error) => {
           switch (error.code) {
@@ -86,24 +104,15 @@ export default {
         });
     };
 
-    const registerWithGoogle = () => {
-      const provider = new GoogleAuthProvider();
-      signInWithPopup(auth, provider)
-        .then(() => {
-          router.push("/feed");
-        })
-        .catch((error) => {
-          errMsg.value = "Erro ao registrar com Google: " + error.message;
-        });
-    };
-
     return {
+      nick,  // Agora o nick está no return
       email,
       password,
       Registrar,
-      registerWithGoogle,
       errMsg,
     };
   },
 };
 </script>
+
+

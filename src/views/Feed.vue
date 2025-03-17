@@ -53,7 +53,7 @@
 
 
 <script>
-import { getFirestore, collection, onSnapshot, addDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, addDoc, doc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import ButtonDialog from "@/components/ButtonDialog.vue"; 
 import BarraPesquisa from "@/components/BarraPesquisa.vue"; 
@@ -67,7 +67,7 @@ export default {
     return {
       salas: [],
       newSala: "",
-      userEmail: "",
+      userNick: "", // Armazena o nickname
       showDialog: false, 
       searchQuery: "", 
     };
@@ -79,17 +79,30 @@ export default {
       );
     },
   },
-  mounted() {
+  async mounted() {
+    await this.fetchUserNick(); // Busca o nickname ao carregar a página
     this.fetchSalas();
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (user) {
-      this.userEmail = user.email;
-    } else {
-      console.error("Nenhum usuário logado.");
-    }
   },
   methods: {
+    async fetchUserNick() {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      
+      if (!user) {
+        console.error("Nenhum usuário logado.");
+        return;
+      }
+
+      const db = getFirestore();
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        this.userNick = userSnap.data().nome; // Pega o nome do Firestore
+      } else {
+        console.error("Usuário não encontrado no Firestore.");
+      }
+    },
     fetchSalas() {
       const db = getFirestore();
       const salasRef = collection(db, "salas");
@@ -115,15 +128,15 @@ export default {
 
       const newSala = {
         sala: this.newSala,
-        user: this.userEmail,
-        creatorId: currentUser.uid, // Adiciona o ID do criador
-        createdAt: new Date(), // Adiciona timestamp (opcional)
+        user: this.userNick, // Agora salva o NICKNAME, não o email!
+        creatorId: currentUser.uid,
+        createdAt: new Date(),
       };
 
       try {
         await addDoc(salasRef, newSala);
         this.newSala = "";
-        this.showDialog = false; // Fecha o modal após criar a sala
+        this.showDialog = false;
       } catch (error) {
         console.error("Erro ao criar sala:", error);
       }

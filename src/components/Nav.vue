@@ -9,7 +9,7 @@
       </RouterLink>
 
       <!-- Menu para desktop -->
-      <div class="hidden sm:flex items-center space-x-4">
+      <div class="sm:flex items-center sm:space-x-4">
         <RouterLink
           to="/registrar"
           v-if="!isLoggedIn"
@@ -44,6 +44,12 @@
                 Perfil
               </button>
               <button
+                @click="config"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
+              >
+                Configuração
+              </button>
+              <button
                 @click="handleSignOut"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
               >
@@ -52,15 +58,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <!-- Menu hamburguer para mobile -->
-      <div class="sm:hidden">
-        <button @click="toggleMobileMenu" class="text-gray-600 hover:text-indigo-600">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-          </svg>
-        </button>
       </div>
     </nav>
 

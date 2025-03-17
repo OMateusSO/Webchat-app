@@ -6,27 +6,18 @@
       </h1>
     </div>
 
-    
+
     <div class="flex flex-col flex-1 max-w-3xl w-full mx-auto">
-      <div
-        id="mensagens-container"
-        class="flex-1 overflow-y-auto p-4"
-      >
+      <div id="mensagens-container" class="flex-1 overflow-y-auto p-4">
         <MensagemView :mensagens="mensagens" :usuarioLogado="usuarioLogado" />
       </div>
 
-      
+
       <form @submit.prevent="enviarMensagem" class="flex py-2 m-2 bg-white">
-        <input
-          v-model="novaMensagem"
-          type="text"
-          placeholder="Digite sua mensagem..."
-          class="flex-1 py-3 px-4 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 transition"
-        />
-        <button
-          type="submit"
-          class="py-3 px-6 bg-indigo-600 text-white font-medium rounded-r-lg hover:bg-indigo-700 transition"
-        >
+        <input v-model="novaMensagem" type="text" placeholder="Digite sua mensagem..."
+          class="flex-1 py-3 px-4 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-600 transition" />
+        <button type="submit"
+          class="py-3 px-6 bg-indigo-600 text-white font-medium rounded-r-lg hover:bg-indigo-700 transition">
           Enviar
         </button>
       </form>
@@ -60,80 +51,100 @@ export default {
     this.carregarMensagens();
   },
   methods: {
-  carregarUsuarioLogado() {
-    const auth = getAuth();
-    const user = auth.currentUser;
+    carregarUsuarioLogado() {
+      const auth = getAuth();
+      const user = auth.currentUser;
 
-    if (user) {
-      this.usuarioLogado = user.email;
-    } else {
-      console.error("Usuário não está logado");
-    }
-  },
-  async carregarSala() {
-    const db = getFirestore();
-    const salaDocRef = doc(db, `salas/${this.salaId}`);
-    try {
-      const docSnap = await getDoc(salaDocRef);
-      if (docSnap.exists()) {
-        this.nomeSala = docSnap.data().sala;
+      if (user) {
+        this.usuarioLogado = user.email;
       } else {
-        console.log("Sala não encontrada");
+        console.error("Usuário não está logado");
       }
-    } catch (error) {
-      console.error("Erro ao carregar sala:", error);
-    }
-  },
-  carregarMensagens() {
-    const db = getFirestore();
-    const salaRef = collection(db, `salas/${this.salaId}/mensagens`);
-    onSnapshot(salaRef, (snapshot) => {
-      this.mensagens = snapshot.docs
-        .map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-        .sort((a, b) => (a.timestamp?.toMillis?.() || 0) - (b.timestamp?.toMillis?.() || 0));
+    },
+    async carregarSala() {
+      const db = getFirestore();
+      const salaDocRef = doc(db, `salas/${this.salaId}`);
+      try {
+        const docSnap = await getDoc(salaDocRef);
+        if (docSnap.exists()) {
+          this.nomeSala = docSnap.data().sala;
+        } else {
+          console.log("Sala não encontrada");
+        }
+      } catch (error) {
+        console.error("Erro ao carregar sala:", error);
+      }
+    },
+    carregarMensagens() {
+      const db = getFirestore();
+      const salaRef = collection(db, `salas/${this.salaId}/mensagens`);
+      onSnapshot(salaRef, (snapshot) => {
+        this.mensagens = snapshot.docs
+          .map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          .sort((a, b) => (a.timestamp?.toMillis?.() || 0) - (b.timestamp?.toMillis?.() || 0));
 
-      this.scrollToBottom();
-    });
-  },
-  async enviarMensagem() {
-    if (!this.novaMensagem.trim()) return;
+        this.scrollToBottom();
+      });
+    },
+    async carregarUsuarioLogado() {
+      const auth = getAuth();
+      const user = auth.currentUser;
 
-    const db = getFirestore();
-    const salaRef = collection(db, `salas/${this.salaId}/mensagens`);
+      if (user) {
+        const db = getFirestore();
+        const userRef = doc(db, "users", user.uid); 
+        const userSnap = await getDoc(userRef);
 
-    const novaMensagem = {
-      text: this.novaMensagem,
-      user: this.usuarioLogado,
-      timestamp: serverTimestamp(),
-    };
+        if (userSnap.exists()) {
+          this.usuarioLogado = userSnap.data().nome; 
+        } else {
+          console.error("Usuário não encontrado no Firestore.");
+          this.usuarioLogado = "Usuário desconhecido"; 
+        }
+      } else {
+        console.error("Usuário não está logado.");
+      }
+    },
+    async enviarMensagem() {
+      if (!this.novaMensagem.trim()) return;
 
-    try {
-      await addDoc(salaRef, novaMensagem);
-      this.novaMensagem = "";
-      this.scrollToBottom();
-    } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
-    }
+      const db = getFirestore();
+      const salaRef = collection(db, `salas/${this.salaId}/mensagens`);
+
+      const novaMensagem = {
+        text: this.novaMensagem,
+        user: this.usuarioLogado,
+        timestamp: serverTimestamp(),
+      };
+
+      try {
+        await addDoc(salaRef, novaMensagem);
+        this.novaMensagem = "";
+        this.scrollToBottom();
+      } catch (error) {
+        console.error("Erro ao enviar mensagem:", error);
+      }
+    },
+    scrollToBottom() {
+      const container = document.getElementById("mensagens-container");
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    },
+    irParaConfiguracoesSala() {
+      this.$router.push(`/sala/${this.salaId}/configuracoes`);
+    },
   },
-  scrollToBottom() {
-    const container = document.getElementById("mensagens-container");
-    if (container) {
-      container.scrollTop = container.scrollHeight;
-    }
-  },
-  irParaConfiguracoesSala() {
-    this.$router.push(`/sala/${this.salaId}/configuracoes`);
-  },
-},
 };
 </script>
 
 <style scoped>
 /* Garantir que o conteúdo não tenha overflow */
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   overflow: hidden;
@@ -145,8 +156,8 @@ html, body {
 
 
 #mensagens-container {
-  height: calc(100vh - 160px); 
-  overflow-y: auto; 
+  height: calc(100vh - 160px);
+  overflow-y: auto;
   padding: 10px;
 }
 
