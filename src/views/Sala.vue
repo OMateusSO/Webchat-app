@@ -142,7 +142,6 @@ export default {
 </script>
 
 <style scoped>
-/* Garantir que o conteúdo não tenha overflow */
 html,
 body {
   height: 100%;

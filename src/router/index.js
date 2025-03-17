@@ -26,6 +26,16 @@ const router = createRouter({
       component: () => import("../views/Perfil.vue"),
     },
     {
+      path: "/Configuracao",
+      component: () => import("../views/Configuracao.vue"),
+    },
+    {
+      path: "/perfil/:id",
+      name: "PerfilPublico",
+      component: () => import("../views/PerfilPublico.vue"),
+      props: true 
+    },
+    {
       path: "/registrar",
       component: () => import("../views/Registrar.vue"),
     },
@@ -49,13 +59,13 @@ const router = createRouter({
       beforeEnter: (to, from, next) => {
         const id = to.params.id;
     
-        // Verifique se o ID é um UUID ou outro formato válido
-        const isValidId = /^[a-zA-Z0-9_-]+$/.test(id); // Exemplo: apenas letras, números, underscores e traços
+        
+        const isValidId = /^[a-zA-Z0-9_-]+$/.test(id); 
     
         if (isValidId) {
           next();
         } else {
-          next("/erro"); // Redirecione para uma página de erro ou outra lógica
+          next("/erro"); 
         }
       },
     },
@@ -68,7 +78,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/:catchAll(.*)", // Captura todas as rotas não definidas
+      path: "/:catchAll(.*)", 
       component: () => import("../views/Erro.vue"),
     },
   ],
@@ -81,12 +91,12 @@ router.beforeEach(async (to, from, next) => {
     if (isAuthenticated) {
       next();
     } else {
-      next("/"); // Redireciona para a página de login
+      next("/"); 
     }
   } else if (["/", "/logar", "/registrar"].includes(to.path) && isAuthenticated) {
-    next("/feed"); // Redireciona para o feed se autenticado
+    next("/feed"); 
   } else {
-    next(); // Permite o acesso às rotas públicas
+    next(); 
   }
 });
 

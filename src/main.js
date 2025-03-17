@@ -1,7 +1,9 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import './index.css'; // Certifique-se de que o caminho e o servidor estão configurados corretamente
+import './assets/index.css';
+
+
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";

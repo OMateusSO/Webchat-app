@@ -1,28 +1,28 @@
 <template>
   <div class="flex-1 overflow-y-auto bg-white p-6 rounded-lg shadow-md" id="mensagens-container">
-    <div
-      v-for="mensagem in mensagens"
-      :key="mensagem.id"
-      class="mb-3 flex flex-col"
-      :class="{
-        'items-end': mensagem.user === usuarioLogado,
-        'items-start': mensagem.user !== usuarioLogado,
-      }"
-    >
-      <div
-        :class="{
-          'text-indigo-700': mensagem.user === usuarioLogado,
-          'text-gray-700': mensagem.user !== usuarioLogado,
-        }"
-      >
-        <p class="text-sm font-semibold">{{ mensagem.user }}</p>
-        <div
-          class="max-w-xs md:max-w-md p-3 rounded-lg shadow-md"
-          :class="{
-            'bg-indigo-100': mensagem.user === usuarioLogado,
-            'bg-gray-200': mensagem.user !== usuarioLogado,
-          }"
-        >
+    <div v-for="mensagem in mensagens" :key="mensagem.id" class="mb-3 flex flex-col" :class="{
+      'items-end': mensagem.user === usuarioLogado,
+      'items-start': mensagem.user !== usuarioLogado,
+    }">
+      <div :class="{
+        'text-indigo-700': mensagem.user === usuarioLogado,
+        'text-gray-700': mensagem.user !== usuarioLogado,
+      }">
+        <p class="text-sm font-semibold">
+          <template v-if="mensagem.user !== usuarioLogado">
+            <router-link :to="`/perfil/${mensagem.userId}`" class="text-blue-600 hover:underline">
+              {{ mensagem.user }}
+            </router-link>
+          </template>
+          <template v-else>
+            {{ mensagem.user }}
+          </template>
+        </p>
+
+        <div class="max-w-xs md:max-w-md p-3 rounded-lg shadow-md" :class="{
+          'bg-indigo-100': mensagem.user === usuarioLogado,
+          'bg-gray-200': mensagem.user !== usuarioLogado,
+        }">
           <p class="mt-1">{{ mensagem.text }}</p>
         </div>
         <p class="text-xs text-gray-500 mt-1">
@@ -39,6 +39,7 @@ export default {
     mensagens: Array,
     usuarioLogado: String,
   },
+  
 };
 </script>
 
