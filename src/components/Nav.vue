@@ -9,7 +9,11 @@
       </RouterLink>
 
       <!-- Menu para desktop -->
+<<<<<<< HEAD
       <div class="sm:flex items-center sm:space-x-4">
+=======
+      <div class="flex items-center space-x-4">
+>>>>>>> 3fae9b22f29a5ef94087d4b951b1552e8249e550
         <RouterLink
           to="/registrar"
           v-if="!isLoggedIn"
