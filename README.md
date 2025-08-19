@@ -1,4 +1,4 @@
-# Projeto-Z
+# Webchat-app
 
 **Projeto-Z** é uma aplicação web desenvolvida com **Vue.js**, utilizando **Firebase** para backend e banco de dados, e estilizada com **Tailwind CSS** para uma interface moderna e responsiva. Este projeto permite a criação e gestão de salas de bate-papo em tempo real.
 
