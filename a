@@ -150,4 +150,10 @@ const onClickOutside = (event) => {
 };
 </script>
 
-<style></style>
+<style>
+.relative>.absolute {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+</style>
